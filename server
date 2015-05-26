@@ -1,0 +1,16 @@
+#!/usr/bin/python
+
+import sys
+
+host = '127.0.0.1'
+port = 5000
+
+if len(sys.argv) == 2:
+    port = sys.argv[1]
+    print 'Server running at port ' + str(port)
+elif len(sys.argv) == 3:
+    host = sys.argv[1]
+    port = sys.argv[2]
+    print 'Connecting to server ' + host + ' at port ' + str(port)
+else:
+    print 'Server running at port ' + str(port)
