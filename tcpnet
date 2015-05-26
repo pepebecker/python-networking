@@ -3,12 +3,12 @@
 import socket
 import sys
 
-host = '127.0.0.1'
-port = 5000
-
 def StartServer(port):
     s = socket.socket()
-    s.bind(('', port))
+    try:
+        s.bind(('', port))
+    except:
+        StartClient('127.0.0.1', port)
     print 'Server running at port ' + str(port)
     s.listen(1)
     c, addr = s.accept()
@@ -22,6 +22,7 @@ def StartServer(port):
         print "Sending: " + str(data)
         c.send(data)
     c.close()
+    sys.exit()
 
 def StartClient(host, port):
     s = socket.socket()
@@ -34,14 +35,21 @@ def StartClient(host, port):
         data = s.recv(1024)
         print 'Received from server: ' + str(data)
         message = raw_input('-> ')
-    s.close();
+    s.close()
+    sys.exit()
 
-if len(sys.argv) == 2:
-    port = int(sys.argv[1])
-    StartServer(port)
-elif len(sys.argv) == 3:
-    host = sys.argv[1]
-    port = int(sys.argv[2])
-    StartClient(host, port)
-else:
-    StartServer(port)
+def Main():
+    host = '127.0.0.1'
+    port = 5000
+    if len(sys.argv) == 2:
+        port = int(sys.argv[1])
+        StartServer(port)
+    elif len(sys.argv) == 3:
+        host = sys.argv[1]
+        port = int(sys.argv[2])
+        StartClient(host, port)
+    else:
+        StartServer(port)
+
+if __name__ == '__main__':
+    Main()
