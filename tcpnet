@@ -1,0 +1,47 @@
+#!/usr/bin/python
+
+import socket
+import sys
+
+host = '127.0.0.1'
+port = 5000
+
+def StartServer(port):
+    s = socket.socket()
+    s.bind(('', port))
+    print 'Server running at port ' + str(port)
+    s.listen(1)
+    c, addr = s.accept()
+    print "Connection from: " + str(addr)
+    while True:
+        data = c.recv(1024)
+        if not data:
+            break
+        print "From connected user: " + str(data)
+        data = str(data).upper()
+        print "Sending: " + str(data)
+        c.send(data)
+    c.close()
+
+def StartClient(host, port):
+    s = socket.socket()
+    s.connect((host, port))
+    print 'Connected to server ' + host + ' at port ' + str(port)
+
+    message = raw_input('-> ')
+    while message != 'q':
+        s.send(message)
+        data = s.recv(1024)
+        print 'Received from server: ' + str(data)
+        message = raw_input('-> ')
+    s.close();
+
+if len(sys.argv) == 2:
+    port = int(sys.argv[1])
+    StartServer(port)
+elif len(sys.argv) == 3:
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+    StartClient(host, port)
+else:
+    StartServer(port)
